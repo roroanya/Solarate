@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lb_black">#14181C</color>
+    <color name="lb_dark">#2C3440</color>
+    <color name="lb_gray">#9AB</color>
+    <color name="lb_green">#00E054</color>
+    <color name="lb_orange">#FF8000</color>
+    <color name="lb_blue">#40BCF4</color>
+    <color name="white">#FFFFFF</color>
+</resources>

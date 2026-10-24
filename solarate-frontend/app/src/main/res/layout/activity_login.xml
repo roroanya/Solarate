@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/lb_black"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign in to Solarate"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/lb_dark"
+        android:hint="Username"
+        android:textColorHint="@color/lb_gray"
+        android:textColor="@color/white"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/lb_dark"
+        android:hint="Password"
+        android:textColorHint="@color/lb_gray"
+        android:textColor="@color/white"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/btnGo"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Go"
+        android:textColor="@color/lb_black"
+        android:backgroundTint="@color/lb_green"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvJoin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account? Join Solarate"
+        android:textColor="@color/lb_gray"
+        android:gravity="center"
+        android:padding="12dp"/>
+
+</LinearLayout>

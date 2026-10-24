@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lb_black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ID: ivDetailBackdrop -->
+        <ImageView
+            android:id="@+id/ivDetailBackdrop"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:background="@color/lb_dark" />
+
+        <!-- ID: tvDetailTitle -->
+        <TextView
+            android:id="@+id/tvDetailTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movie Title"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <!-- ID: tvDetailRating -->
+        <TextView
+            android:id="@+id/tvDetailRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="★ 8.5"
+            android:textColor="@color/lb_green"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- ID: tvDetailOverview -->
+        <TextView
+            android:id="@+id/tvDetailOverview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sinopsis film akan muncul di sini..."
+            android:textColor="@color/lb_gray"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"
+            android:lineSpacingExtra="4dp" />
+
+    </LinearLayout>
+</ScrollView>

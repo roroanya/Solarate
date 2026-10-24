@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Solarate" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:statusBarColor">@color/lb_black</item>
+        <item name="android:windowBackground">@color/lb_black</item>
+    </style>
+
+    <style name="Theme.Solarate" parent="Base.Theme.Solarate" />
+</resources>

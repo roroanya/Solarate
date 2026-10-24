@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/lb_black"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Join Solarate"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/lb_dark"
+        android:hint="Email Address"
+        android:textColorHint="@color/lb_gray"
+        android:textColor="@color/white"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="12dp"
+        android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:id="@+id/etRegUsername"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/lb_dark"
+        android:hint="Username"
+        android:textColorHint="@color/lb_gray"
+        android:textColor="@color/white"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="12dp"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/etRegPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/lb_dark"
+        android:hint="Password"
+        android:textColorHint="@color/lb_gray"
+        android:textColor="@color/white"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Create Account"
+        android:textColor="@color/lb_black"
+        android:backgroundTint="@color/lb_green"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvBackToLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Already have an account? Sign In"
+        android:textColor="@color/lb_gray"
+        android:gravity="center"
+        android:padding="12dp"/>
+
+</LinearLayout>
