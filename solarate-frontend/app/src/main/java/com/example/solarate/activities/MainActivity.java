@@ -5,9 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.solarate.R;
 import com.example.solarate.fragments.FilmsFragment;
+import com.example.solarate.fragments.JournalFragment;
 import com.example.solarate.fragments.ProfileFragment;
-import com.example.solarate.fragments.SearchFragment;
-import com.example.solarate.fragments.WatchlistFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,8 +26,7 @@ public class MainActivity extends AppCompatActivity {
             int id = item.getItemId();
 
             if (id == R.id.nav_films) selectedFragment = new FilmsFragment();
-            else if (id == R.id.nav_search) selectedFragment = new SearchFragment();
-            else if (id == R.id.nav_watchlist) selectedFragment = new WatchlistFragment();
+            else if (id == R.id.nav_journal) selectedFragment = new JournalFragment();
             else if (id == R.id.nav_profile) selectedFragment = new ProfileFragment();
 
             if (selectedFragment != null) {

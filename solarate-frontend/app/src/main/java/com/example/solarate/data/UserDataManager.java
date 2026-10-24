@@ -46,6 +46,21 @@ public class UserDataManager {
         return name + "_" + user;
     }
 
+    public static synchronized void migrateUser(Context context, String oldUser, String newUser) {
+        if (oldUser == null || newUser == null || oldUser.equals(newUser)) return;
+        SharedPreferences p = prefs(context);
+        SharedPreferences.Editor e = p.edit();
+        String suffix = "_" + oldUser;
+        for (java.util.Map.Entry<String, ?> entry : p.getAll().entrySet()) {
+            String k = entry.getKey();
+            if (k.endsWith(suffix) && entry.getValue() instanceof String) {
+                String base = k.substring(0, k.length() - suffix.length());
+                e.putString(base + "_" + newUser, (String) entry.getValue());
+                e.remove(k);
+            }
+        }
+        e.apply();
+    }
     // ==================== FILM LISTS (favorites / watchlist / watched) ====================
 
     /** Urutan: yang terakhir ditambahkan ada di paling depan. */
@@ -83,7 +98,7 @@ public class UserDataManager {
                 removed = true;
             }
         }
-        if (!removed) list.add(0, movie);
+        if (!removed) list.add(0, movie.slimCopy());
         saveMovies(context, listName, list);
         return !removed;
     }

@@ -3,6 +3,7 @@ package com.example.solarate.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,12 +19,15 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.solarate.R;
 import com.example.solarate.data.UserDataManager;
+import com.example.solarate.models.CastMember;
+import com.example.solarate.models.CrewMember;
 import com.example.solarate.models.Movie;
 import com.example.solarate.models.Review;
 import com.example.solarate.network.ApiClient;
 import com.example.solarate.network.ApiService;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -155,6 +159,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         String overview = m.getOverview();
         tvOverview.setText(overview == null || overview.isEmpty() ? "Sinopsis belum tersedia." : overview);
 
+        // Cast & Crew (dua baris horizontal di bawah Synopsis)
+        bindPeople(m);
+
         // Poster
         Glide.with(this)
                 .load(m.getPosterUrl())
@@ -170,6 +177,56 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .placeholder(R.color.lb_dark)
                 .error(R.color.lb_black)
                 .into(ivBackdrop);
+    }
+
+    // ==========================================================
+    // CAST & CREW: dua baris horizontal terpisah di bawah Synopsis.
+    // Datanya dari field "cast" dan "crew" di response detail film.
+    // Label dan barisnya disembunyikan kalau TMDB belum punya datanya.
+    // ==========================================================
+    private void bindPeople(Movie m) {
+        LinearLayout llCast = findViewById(R.id.llCast);
+        LinearLayout llCrew = findViewById(R.id.llCrew);
+        llCast.removeAllViews();   // dibersihkan dulu supaya tidak dobel kalau bindMovie dipanggil ulang
+        llCrew.removeAllViews();
+
+        List<CastMember> cast = m.getCast();
+        if (cast != null) {
+            for (CastMember c : cast) {
+                addPerson(llCast, c.getName(), c.getCharacter(), c.getProfileUrl());
+            }
+        }
+        List<CrewMember> crew = m.getCrew();
+        if (crew != null) {
+            for (CrewMember c : crew) {
+                addPerson(llCrew, c.getName(), c.getRole(), c.getProfileUrl());
+            }
+        }
+
+        boolean hasCast = llCast.getChildCount() > 0;
+        boolean hasCrew = llCrew.getChildCount() > 0;
+        findViewById(R.id.tvCastLabel).setVisibility(hasCast ? View.VISIBLE : View.GONE);
+        findViewById(R.id.tvCrewLabel).setVisibility(hasCrew ? View.VISIBLE : View.GONE);
+        ((View) llCast.getParent()).setVisibility(hasCast ? View.VISIBLE : View.GONE);
+        ((View) llCrew.getParent()).setVisibility(hasCrew ? View.VISIBLE : View.GONE);
+    }
+
+    /** Tambah satu orang (foto bulat, nama, dan karakter/peran) ke baris horizontal. */
+    private void addPerson(LinearLayout parent, String name, String subtitle, String photoUrl) {
+        View item = LayoutInflater.from(this).inflate(R.layout.item_person, parent, false);
+        ((TextView) item.findViewById(R.id.tvPersonName)).setText(name == null ? "" : name);
+        TextView tvSub = item.findViewById(R.id.tvPersonSubtitle);
+        if (subtitle == null || subtitle.isEmpty()) {
+            tvSub.setVisibility(View.GONE);
+        } else {
+            tvSub.setText(subtitle);
+        }
+        Glide.with(this)
+                .load(photoUrl)    // null -> tampil kotak abu-abu (placeholder)
+                .placeholder(R.color.lb_dark)
+                .error(R.color.lb_dark)
+                .into((ImageView) item.findViewById(R.id.ivPersonPhoto));
+        parent.addView(item);
     }
 
     private String valueOrDash(String s) {

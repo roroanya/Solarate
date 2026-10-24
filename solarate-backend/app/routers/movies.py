@@ -25,9 +25,12 @@ async def _feed(path: str, page: int, params: dict | None = None) -> s.Page[s.Mo
     return mappers.page_of(data, mappers.movie_summary, require_poster=True)
 
 
-@router.get("/trending", response_model=s.Page[s.MovieSummary], summary="Popular this week")
-async def trending(page: int = Pg):
-    return await _feed("/trending/movie/week", page)
+@router.get("/trending", response_model=s.Page[s.MovieSummary], summary="Popular today / this week")
+async def trending(
+    page: int = Pg,
+    window: Literal["day", "week"] = Query("week", description="'day' = Popular today, 'week' = Popular this week"),
+):
+    return await _feed(f"/trending/movie/{window}", page)
 
 
 @router.get("/popular", response_model=s.Page[s.MovieSummary], summary="Most popular")

@@ -1,4 +1,4 @@
-"""Ubah respons mentah TMDB jadi bentuk JSON yang ramah untuk aplikasi Android."""
+"""Ubah respons mentah TMDB jadi bentuk JSON untuk aplikasi Android."""
 import re
 from typing import Any, Callable
 
@@ -207,6 +207,7 @@ def movie_detail(d: dict[str, Any], region: str) -> s.MovieDetail:
             )
         )
     directors = [c.name for c in crew if c.role == "Director"]
+    producers = [c.name for c in crew if c.role == "Producer"][:3]
 
     releases, certification = _releases(d.get("release_dates"), region)
     key = _trailer(d.get("videos"))
@@ -227,6 +228,8 @@ def movie_detail(d: dict[str, Any], region: str) -> s.MovieDetail:
         rating=rating5(d.get("vote_average"), d.get("vote_count")),
         vote_count=d.get("vote_count") or 0,
         directors=directors,
+        director=", ".join(directors) or None,
+        producer=", ".join(producers) or None,
         cast=cast,
         crew=crew,
         trailer_url=f"https://www.youtube.com/watch?v={key}" if key else None,

@@ -1,242 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/lb_black">
 
-    <LinearLayout
+    <!-- TOP BAR & TABS -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="Profile"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp" />
 
-        <!-- 1. TOP BAR & TABS -->
-        <TextView
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/profileTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lb_black"
+        app:tabIndicatorColor="@color/lb_green"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/lb_gray"
+        app:tabMode="fixed"
+        app:tabGravity="fill">
+        <com.google.android.material.tabs.TabItem android:text="Profile" />
+        <com.google.android.material.tabs.TabItem android:text="Diary" />
+        <com.google.android.material.tabs.TabItem android:text="Lists" />
+        <com.google.android.material.tabs.TabItem android:text="Watchlist" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lb_dark" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- PANEL 0: PROFILE -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/panelProfile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Profile"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="16dp" />
+            android:layout_height="match_parent">
 
-        <!-- TAMBAHAN ID: profileTabs -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/profileTabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/lb_black"
-            app:tabIndicatorColor="@color/lb_green"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/lb_gray"
-            app:tabMode="fixed"
-            app:tabGravity="fill">
-            <com.google.android.material.tabs.TabItem android:text="Profile" />
-            <com.google.android.material.tabs.TabItem android:text="Diary" />
-            <com.google.android.material.tabs.TabItem android:text="Lists" />
-            <com.google.android.material.tabs.TabItem android:text="Watchlist" />
-        </com.google.android.material.tabs.TabLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lb_dark" />
+                <!-- 2. HEADER PROFIL -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:paddingVertical="24dp">
 
-        <!-- 2. HEADER PROFIL -->
+                    <ImageView
+                        android:id="@+id/ivProfileAvatar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/logo_solarate"
+                        android:background="@drawable/bg_pro_badge"
+                        android:backgroundTint="@color/lb_dark"
+                        android:padding="12dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:id="@+id/tvProfileUsernameHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="username"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvProfileBio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingHorizontal="24dp"
+                        android:text="here's my museum of movies"
+                        android:textColor="@color/lb_gray"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <!-- 3. FAVORITES SECTION -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FAVORITES"
+                    android:textColor="@color/lb_gray"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginBottom="8dp" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:id="@+id/llFavorites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/tvFavoritesEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Belum ada favorit. Tekan tombol Favorite di halaman detail film."
+                    android:textColor="@color/lb_gray"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginTop="-16dp"
+                    android:layout_marginBottom="24dp"
+                    android:visibility="gone" />
+
+                <!-- 4. RECENT ACTIVITY SECTION -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RECENT ACTIVITY"
+                    android:textColor="@color/lb_gray"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginBottom="8dp" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:id="@+id/llRecent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/tvRecentEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Belum ada aktivitas. Tandai film sebagai Watched atau tulis review."
+                    android:textColor="@color/lb_gray"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginTop="-16dp"
+                    android:layout_marginBottom="24dp"
+                    android:visibility="gone" />
+
+                <!-- 5. STATS LIST (DAFTAR MENU) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp">
+
+                    <!-- Item 1 (Watched) -->
+                    <LinearLayout
+                        android:id="@+id/rowWatched"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Watched" android:textColor="@color/lb_gray" android:textSize="14sp"/>
+                        <TextView android:id="@+id/tvWatchedCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/lb_gray" android:textSize="14sp" android:layout_marginEnd="8dp"/>
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_arrow_right" app:tint="@color/lb_gray"/>
+                    </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/lb_dark" />
+
+                    <!-- Item 2 (Reviews) -->
+                    <LinearLayout
+                        android:id="@+id/rowReviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Reviews" android:textColor="@color/lb_gray" android:textSize="14sp"/>
+                        <TextView android:id="@+id/tvReviewsCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/lb_gray" android:textSize="14sp" android:layout_marginEnd="8dp"/>
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_arrow_right" app:tint="@color/lb_gray"/>
+                    </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/lb_dark" />
+
+                    <!-- Item 3 (Watchlist) -->
+                    <LinearLayout
+                        android:id="@+id/rowWatchlist"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Watchlist" android:textColor="@color/lb_gray" android:textSize="14sp"/>
+                        <TextView android:id="@+id/tvWatchlistCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/lb_gray" android:textSize="14sp" android:layout_marginEnd="8dp"/>
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_arrow_right" app:tint="@color/lb_gray"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Jarak sebelum tombol settings -->
+                <View android:layout_width="match_parent" android:layout_height="25dp" />
+
+                <!-- BUTTON SETTINGS -->
+                <Button
+                    android:id="@+id/btnSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="Settings"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/lb_dark"
+                    android:textStyle="bold" />
+
+                <!-- 6. BUTTON SIGN OUT -->
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:text="Sign Out"
+                    android:textColor="@color/lb_black"
+                    android:backgroundTint="@color/lb_green"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- PANEL 1: DIARY -->
         <LinearLayout
+            android:id="@+id/panelDiary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:paddingVertical="24dp">
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/logo_solarate"
-                android:background="@drawable/bg_pro_badge"
-                android:backgroundTint="@color/lb_dark"
-                android:padding="12dp"
-                android:layout_marginBottom="12dp" />
+            android:padding="16dp"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/tvProfileUsernameHeader"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="username"
+                android:text="Your Diary"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <!-- Bintang & Angka -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="4dp">
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:src="@drawable/ic_star"
-                    app:tint="@color/lb_green" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 20"
-                    android:textColor="@color/lb_gray"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="here's my museum of movies"
-                android:textColor="@color/lb_gray"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
+                android:text="Belum ada catatan film yang ditonton."
+                android:textColor="@color/lb_gray" />
         </LinearLayout>
 
-        <!-- 3. FAVORITES SECTION -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="FAVORITES"
-            android:textColor="@color/lb_gray"
-            android:textSize="12sp"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="8dp" />
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:scrollbars="none"
-            android:layout_marginBottom="24dp">
-
-            <LinearLayout
-                android:id="@+id/llFavorites"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
-
-        <TextView
-            android:id="@+id/tvFavoritesEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Belum ada favorit. Tekan tombol Favorite di halaman detail film."
-            android:textColor="@color/lb_gray"
-            android:textSize="12sp"
-            android:paddingHorizontal="16dp"
-            android:layout_marginTop="-16dp"
-            android:layout_marginBottom="24dp"
-            android:visibility="gone" />
-
-        <!-- 4. RECENT ACTIVITY SECTION -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="RECENT ACTIVITY"
-            android:textColor="@color/lb_gray"
-            android:textSize="12sp"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="8dp" />
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:scrollbars="none"
-            android:layout_marginBottom="24dp">
-
-            <LinearLayout
-                android:id="@+id/llRecent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
-
-        <TextView
-            android:id="@+id/tvRecentEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Belum ada aktivitas. Tandai film sebagai Watched atau tulis review."
-            android:textColor="@color/lb_gray"
-            android:textSize="12sp"
-            android:paddingHorizontal="16dp"
-            android:layout_marginTop="-16dp"
-            android:layout_marginBottom="24dp"
-            android:visibility="gone" />
-
-        <!-- 5. STATS LIST (DAFTAR MENU) -->
+        <!-- PANEL 2: LISTS -->
         <LinearLayout
+            android:id="@+id/panelLists"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp">
+            android:visibility="gone">
 
-            <!-- Item 1 (Watched): ID rowWatched -->
-            <LinearLayout
-                android:id="@+id/rowWatched"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="?attr/selectableItemBackground"> <!-- Efek klik -->
+                android:layout_height="wrap_content"
+                android:text="Your Lists"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
 
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Watched" android:textColor="@color/lb_gray" android:textSize="14sp"/>
-                <TextView android:id="@+id/tvWatchedCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/lb_gray" android:textSize="14sp" android:layout_marginEnd="8dp"/>
-                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_arrow_right" app:tint="@color/lb_gray"/>
-            </LinearLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/lb_dark" />
-
-            <!-- Item 2 (Reviews): TAMBAHAN ID: rowReviews -->
-            <LinearLayout
-                android:id="@+id/rowReviews"
+            <TextView
+                android:id="@+id/tvListsStatus"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="?attr/selectableItemBackground"> <!-- Efek klik -->
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:text="Memuat lists..."
+                android:textColor="@color/lb_gray"
+                android:visibility="gone" />
 
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Reviews" android:textColor="@color/lb_gray" android:textSize="14sp"/>
-                <TextView android:id="@+id/tvReviewsCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/lb_gray" android:textSize="14sp" android:layout_marginEnd="8dp"/>
-                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_arrow_right" app:tint="@color/lb_gray"/>
-            </LinearLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/lb_dark" />
-
-            <!-- Item 3 (Watchlist): TAMBAHAN ID: rowWatchlist -->
-            <LinearLayout
-                android:id="@+id/rowWatchlist"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvListsTab"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="?attr/selectableItemBackground"> <!-- Efek klik -->
-
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Watchlist" android:textColor="@color/lb_gray" android:textSize="14sp"/>
-                <TextView android:id="@+id/tvWatchlistCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/lb_gray" android:textSize="14sp" android:layout_marginEnd="8dp"/>
-                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_arrow_right" app:tint="@color/lb_gray"/>
-            </LinearLayout>
-
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="12dp" />
         </LinearLayout>
 
-        <!-- Jarak sebelum tombol sign out -->
-        <View android:layout_width="match_parent" android:layout_height="32dp" />
-
-        <!-- 6. TOMBOL SIGN OUT (HIJAU) -->
-        <Button
-            android:id="@+id/btnLogout"
+        <!-- PANEL 3: WATCHLIST -->
+        <LinearLayout
+            android:id="@+id/panelWatchlist"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="24dp"
-            android:text="Sign Out"
-            android:textColor="@color/lb_black"
-            android:backgroundTint="@color/lb_green"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your Watchlist"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp" />
+
+            <TextView
+                android:id="@+id/tvWatchlistTabCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0 films"
+                android:textColor="@color/lb_gray"
+                android:textSize="13sp"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tvWatchlistTabEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum ada film yang ingin ditonton.\nTekan tombol Watchlist di halaman detail film."
+                android:textColor="@color/lb_gray"
+                android:paddingHorizontal="16dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvWatchlistTab"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="12dp" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

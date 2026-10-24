@@ -1,16 +1,12 @@
 from typing import Generic, TypeVar
-
 from pydantic import BaseModel
-
 T = TypeVar("T")
-
 
 class Page(BaseModel, Generic[T]):
     page: int
     total_pages: int
     total_results: int
     results: list[T]
-
 
 class MovieSummary(BaseModel):
     id: int
@@ -19,14 +15,12 @@ class MovieSummary(BaseModel):
     release_date: str | None = None
     poster_url: str | None = None
     backdrop_url: str | None = None
-    rating: float | None = None  # skala 0-5 ala Letterboxd, null kalau belum ada vote
+    rating: float | None = None
     vote_count: int = 0
-
 
 class Genre(BaseModel):
     id: int
     name: str
-
 
 class CastMember(BaseModel):
     id: int
@@ -34,19 +28,16 @@ class CastMember(BaseModel):
     character: str | None = None
     profile_url: str | None = None
 
-
 class CrewMember(BaseModel):
     id: int
     name: str
     role: str
     profile_url: str | None = None
 
-
 class Provider(BaseModel):
     id: int
     name: str
     logo_url: str | None = None
-
 
 class Providers(BaseModel):
     region: str | None = None
@@ -55,13 +46,11 @@ class Providers(BaseModel):
     rent: list[Provider] = []
     buy: list[Provider] = []
 
-
 class Release(BaseModel):
     country: str
     type: str
     date: str | None = None
     certification: str | None = None
-
 
 class Review(BaseModel):
     id: str
@@ -74,7 +63,6 @@ class Review(BaseModel):
     created_at: str | None = None
     url: str | None = None
     movie: MovieSummary | None = None
-
 
 class MovieDetail(BaseModel):
     id: int
@@ -92,6 +80,8 @@ class MovieDetail(BaseModel):
     rating: float | None = None
     vote_count: int = 0
     directors: list[str] = []
+    director: str | None = None
+    producer: str | None = None
     cast: list[CastMember] = []
     crew: list[CrewMember] = []
     trailer_url: str | None = None
@@ -107,13 +97,11 @@ class MovieDetail(BaseModel):
     recommendations: list[MovieSummary] = []
     reviews: list[Review] = []
 
-
 class PersonSummary(BaseModel):
     id: int
     name: str
     profile_url: str | None = None
     known_for_department: str | None = None
-
 
 class PersonDetail(PersonSummary):
     biography: str | None = None
@@ -123,12 +111,10 @@ class PersonDetail(PersonSummary):
     films_as_actor: list[MovieSummary] = []
     films_as_director: list[MovieSummary] = []
 
-
 class SearchResponse(BaseModel):
     query: str
     movies: Page[MovieSummary] | None = None
     people: Page[PersonSummary] | None = None
-
 
 class ListSummary(BaseModel):
     slug: str
@@ -139,7 +125,6 @@ class ListSummary(BaseModel):
     film_count: int
     previews: list[str]
 
-
 class ListDetail(BaseModel):
     slug: str
     title: str
@@ -149,29 +134,24 @@ class ListDetail(BaseModel):
     film_count: int
     films: Page[MovieSummary]
 
-
 class JournalSummary(BaseModel):
     slug: str
     title: str
     subtitle: str
     cover_urls: list[str]
 
-
 class JournalDetail(JournalSummary):
     paragraphs: list[str]
     list_slug: str
     films: list[MovieSummary]
 
-
 class Country(BaseModel):
     code: str
     name: str
 
-
 class Language(BaseModel):
     code: str
     name: str
-
 
 class SortOption(BaseModel):
     key: str

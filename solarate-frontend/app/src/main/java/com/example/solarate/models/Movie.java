@@ -1,6 +1,7 @@
 package com.example.solarate.models;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class Movie {
     @SerializedName("id")
@@ -30,17 +31,23 @@ public class Movie {
     @SerializedName("overview")
     private String overview;
 
-    // --- FIELD BARU UNTUK HALAMAN DETAIL (opsional, diisi oleh backend) ---
+    // --- FIELD UNTUK HALAMAN DETAIL ---
     @SerializedName("runtime")
-    private int runtime;      // durasi dalam menit
+    private int runtime;
 
     @SerializedName("director")
-    private String director;  // nama sutradara
+    private String director;
 
     @SerializedName("producer")
-    private String producer;  // nama produser
+    private String producer;
 
-    // Constructor kosong (dibutuhkan Gson saat membaca data yang disimpan)
+    @SerializedName("cast")
+    private List<CastMember> cast;
+
+    @SerializedName("crew")
+    private List<CrewMember> crew;
+
+    // Constructor kosong
     public Movie() { }
 
     // Constructor untuk data dummy / data ringan dari Bundle
@@ -63,7 +70,24 @@ public class Movie {
     public int getRuntime() { return runtime; }
     public String getDirector() { return director; }
     public String getProducer() { return producer; }
-
+    public List<CastMember> getCast() { return cast; }
+    public List<CrewMember> getCrew() { return crew; }
+    public Movie slimCopy() {
+        Movie c = new Movie();
+        c.id = id;
+        c.title = title;
+        c.year = year;
+        c.releaseDate = releaseDate;
+        c.posterUrl = posterUrl;
+        c.backdropUrl = backdropUrl;
+        c.rating = rating;
+        c.voteCount = voteCount;
+        c.overview = overview;
+        c.runtime = runtime;
+        c.director = director;
+        c.producer = producer;
+        return c;
+    }
     public void setPosterUrl(String posterUrl) { this.posterUrl = posterUrl; }
 
     /** Tahun rilis sebagai teks. Jika field year kosong, diambil dari release_date. */

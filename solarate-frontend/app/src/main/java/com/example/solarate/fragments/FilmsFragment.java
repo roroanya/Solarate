@@ -56,7 +56,7 @@ public class FilmsFragment extends Fragment {
                 ApiService api = ApiClient.getClient().create(ApiService.class);
 
                 // Eksekusi HTTP Request (Sinkron)
-                Response<MovieResponse> response = api.getPopularMovies().execute();
+                Response<MovieResponse> response = api.getTrendingMovies("day").execute();
 
                 // Jika request berhasil (Status 200 OK)
                 if (response.isSuccessful() && response.body() != null) {

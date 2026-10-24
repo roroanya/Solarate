@@ -6,15 +6,24 @@
     android:background="@color/lb_black"
     android:padding="16dp">
 
-    <!-- Header -->
     <TextView
+        android:id="@+id/tvListsTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your Lists"
+        android:text="List"
         android:textColor="@color/white"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvListsDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:text="Memuat..."
+        android:textColor="@color/lb_gray"
+        android:textSize="13sp" />
 
     <!-- Grid Poster Film -->
     <androidx.recyclerview.widget.RecyclerView

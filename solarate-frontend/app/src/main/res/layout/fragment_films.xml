@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/lb_black">
 
-    <!-- 1. HEADER / TOP BAR (MENGGUNAKAN LOGO_HEADER) -->
+    <!-- 1. LOGO_HEADER -->
     <ImageView
         android:layout_width="200dp"
         android:layout_height="80dp"
@@ -16,34 +16,11 @@
         android:src="@drawable/logo_header"
         android:scaleType="fitCenter" />
 
-    <!-- 2. TAB LAYOUT -->
-    <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/lb_black"
-        app:tabIndicatorColor="@color/lb_green"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/lb_gray"
-        app:tabMode="fixed"
-        app:tabGravity="fill">
-
-        <com.google.android.material.tabs.TabItem android:text="Films" />
-        <com.google.android.material.tabs.TabItem android:text="Reviews" />
-        <com.google.android.material.tabs.TabItem android:text="Lists" />
-        <com.google.android.material.tabs.TabItem android:text="Journal" />
-    </com.google.android.material.tabs.TabLayout>
-
-    <!-- Garis pemisah tipis -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/lb_dark" />
-
-    <!-- 3. SECTION HEADER -->
+    <!-- 2. SECTION HEADER -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Popular this week"
+        android:text="Popular Today"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -51,7 +28,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="8dp" />
 
-    <!-- 4. RECYCLER VIEW (GRID FILM) -->
+    <!-- 3. RECYCLER VIEW (GRID FILM) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMovies"
         android:layout_width="match_parent"

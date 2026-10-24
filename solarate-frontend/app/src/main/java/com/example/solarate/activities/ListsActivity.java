@@ -1,47 +1,96 @@
 package com.example.solarate.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.solarate.R;
 import com.example.solarate.adapters.MovieAdapter;
+import com.example.solarate.models.ListDetail;
 import com.example.solarate.models.Movie;
+import com.example.solarate.network.ApiClient;
+import com.example.solarate.network.ApiService;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import retrofit2.Response;
+
+/** Isi satu list: grid film dari backend (/api/lists/{slug}). Dibuka dari tab Lists di Profile. */
 public class ListsActivity extends AppCompatActivity {
+
+    private static final String EXTRA_SLUG = "LIST_SLUG";
+    private static final String EXTRA_TITLE = "LIST_TITLE";
+
+    public static Intent newIntent(Context ctx, String slug, String title) {
+        Intent i = new Intent(ctx, ListsActivity.class);
+        i.putExtra(EXTRA_SLUG, slug);
+        i.putExtra(EXTRA_TITLE, title);
+        return i;
+    }
+
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private RecyclerView rvLists;
+    private TextView tvTitle, tvDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
 
-        // 1. Setup RecyclerView
-        RecyclerView rvLists = findViewById(R.id.rvLists);
-        // Pakai GridLayoutManager 3 kolom (sama persis seperti beranda)
-        rvLists.setLayoutManager(new GridLayoutManager(this, 3));
+        tvTitle = findViewById(R.id.tvListsTitle);
+        tvDescription = findViewById(R.id.tvListsDescription);
+        rvLists = findViewById(R.id.rvLists);
+        rvLists.setLayoutManager(new GridLayoutManager(this, 3));   // sama seperti beranda
 
-        // 2. Siapkan Data Dummy
-        List<Movie> dummyMovies = new ArrayList<>();
+        String slug = getIntent().getStringExtra(EXTRA_SLUG);
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
+        if (slug == null) {
+            finish();
+            return;
+        }
+        if (title != null) tvTitle.setText(title);
 
-        // Format: new Movie(ID_TMDB, "Judul", "URL Poster")
-        // Kita pakai ID asli dari TMDB agar saat diklik, halaman detailnya bisa memuat data dari backend
-        dummyMovies.add(new Movie(634649, "Spider-Man: No Way Home", "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"));
-        dummyMovies.add(new Movie(438631, "Dune", "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg"));
-        dummyMovies.add(new Movie(361743, "Top Gun: Maverick", "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg"));
-        dummyMovies.add(new Movie(872585, "Oppenheimer", "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"));
-        dummyMovies.add(new Movie(157336, "Interstellar", "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"));
-        dummyMovies.add(new Movie(76600, "Avatar: The Way of Water", "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg"));
-        dummyMovies.add(new Movie(299534, "Avengers: Endgame", "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg"));
-        dummyMovies.add(new Movie(603, "The Matrix", "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg"));
-        dummyMovies.add(new Movie(155, "The Dark Knight", "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"));
+        loadList(slug);
+    }
 
-        // 3. Panggil MovieAdapter (Adapter yang sama dengan beranda)
-        // Karena pakai adapter yang sama, fungsi klik ke halaman detail (MovieDetailActivity) akan otomatis berjalan
-        MovieAdapter adapter = new MovieAdapter(dummyMovies, this);
-        rvLists.setAdapter(adapter);
+    private void loadList(String slug) {
+        executor.execute(() -> {
+            try {
+                ApiService api = ApiClient.getClient().create(ApiService.class);
+                Response<ListDetail> res = api.getListDetail(slug).execute();
+                if (res.isSuccessful() && res.body() != null) {
+                    ListDetail d = res.body();
+                    List<Movie> movies = d.getFilms().getResults();
+                    handler.post(() -> {
+                        if (isFinishing()) return;
+                        tvTitle.setText(d.getTitle());
+                        tvDescription.setText(d.getDescription() + "\nby " + d.getAuthor()
+                                + "  •  " + d.getFilmCount() + " films");
+                        // MovieAdapter yang sama dengan beranda -> klik poster otomatis ke halaman detail
+                        rvLists.setAdapter(new MovieAdapter(movies, this));
+                    });
+                } else {
+                    toast("Gagal memuat list. Code: " + res.code());
+                }
+            } catch (Exception e) {
+                toast("Error koneksi: pastikan Backend Python menyala.");
+            }
+        });
+    }
+
+    private void toast(String msg) {
+        handler.post(() -> Toast.makeText(this, msg, Toast.LENGTH_LONG).show());
     }
 }

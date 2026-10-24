@@ -15,7 +15,7 @@
         android:theme="@style/Theme.Solarate"
         android:usesCleartextTraffic="true">
 
-        <!-- 1. SPLASH ACTIVITY SEBAGAI HALAMAN PERTAMA (LAUNCHER) -->
+        <!-- 1. SPLASH ACTIVITY -->
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">
@@ -50,10 +50,12 @@
         <activity
             android:name=".activities.ProfileActivity"
             android:exported="false" />
-
-        <!-- ========================================== -->
-        <!-- TAMBAHKAN DI SINI (Di dalam tag application) -->
-        <!-- ========================================== -->
+        <activity
+            android:name=".activities.WatchedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.DiaryActivity"
             android:exported="false" />
