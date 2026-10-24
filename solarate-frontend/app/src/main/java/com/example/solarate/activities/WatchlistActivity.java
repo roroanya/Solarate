@@ -1,15 +1,12 @@
 package com.example.solarate.activities;
 
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.solarate.R;
+import com.example.solarate.data.UserDataManager;
 
-public class WatchlistActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Menghubungkan ke layout activity_watchlist.xml
-        setContentView(R.layout.activity_watchlist);
+/** Daftar film yang ingin ditonton. Terisi dari tombol "Watchlist" di halaman detail. */
+public class WatchlistActivity extends MovieGridActivity {
+    @Override protected String getListName() { return UserDataManager.WATCHLIST; }
+    @Override protected String getScreenTitle() { return "Your Watchlist"; }
+    @Override protected String getEmptyMessage() {
+        return "Belum ada film yang ingin ditonton.\nTekan tombol Watchlist di halaman detail film.";
     }
 }

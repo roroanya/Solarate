@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,18 +21,32 @@ import com.example.solarate.R;
 import com.example.solarate.activities.DiaryActivity;
 import com.example.solarate.activities.ListsActivity;
 import com.example.solarate.activities.LoginActivity;
+import com.example.solarate.activities.MovieDetailActivity;
+import com.example.solarate.activities.ReviewsActivity;
+import com.example.solarate.activities.WatchedActivity;
 import com.example.solarate.activities.WatchlistActivity;
+import com.example.solarate.data.UserDataManager;
+import com.example.solarate.models.Movie;
+import com.example.solarate.models.Review;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class ProfileFragment extends Fragment {
+
+    private static final int MAX_RECENT = 10;
 
     private TextView tvUsernameHeader;
     private Button btnLogout;
     private TabLayout profileTabs;
-    private LinearLayout rowFilms, rowReviews, rowWatchlist;
+    private LinearLayout rowWatched, rowReviews, rowWatchlist;
+    private TextView tvWatchedCount, tvReviewsCount, tvWatchlistCount;
 
-    // Deklarasi ImageView untuk poster dummy
-    private ImageView ivFav1, ivFav2, ivFav3, ivRecent1, ivRecent2;
+    private LinearLayout llFavorites, llRecent;
+    private TextView tvFavoritesEmpty, tvRecentEmpty;
 
     public ProfileFragment() { }
 
@@ -46,59 +59,35 @@ public class ProfileFragment extends Fragment {
         tvUsernameHeader = view.findViewById(R.id.tvProfileUsernameHeader);
         btnLogout = view.findViewById(R.id.btnLogout);
         profileTabs = view.findViewById(R.id.profileTabs);
-        rowFilms = view.findViewById(R.id.rowFilms);
+
+        rowWatched = view.findViewById(R.id.rowWatched);
         rowReviews = view.findViewById(R.id.rowReviews);
         rowWatchlist = view.findViewById(R.id.rowWatchlist);
+        tvWatchedCount = view.findViewById(R.id.tvWatchedCount);
+        tvReviewsCount = view.findViewById(R.id.tvReviewsCount);
+        tvWatchlistCount = view.findViewById(R.id.tvWatchlistCount);
 
-        // Inisialisasi ImageView untuk poster
-        ivFav1 = view.findViewById(R.id.ivFav1);
-        ivFav2 = view.findViewById(R.id.ivFav2);
-        ivFav3 = view.findViewById(R.id.ivFav3);
-        ivRecent1 = view.findViewById(R.id.ivRecent1);
-        ivRecent2 = view.findViewById(R.id.ivRecent2);
+        llFavorites = view.findViewById(R.id.llFavorites);
+        llRecent = view.findViewById(R.id.llRecent);
+        tvFavoritesEmpty = view.findViewById(R.id.tvFavoritesEmpty);
+        tvRecentEmpty = view.findViewById(R.id.tvRecentEmpty);
 
         // 2. Ambil username dari SharedPreferences
         if (getActivity() != null) {
             SharedPreferences prefs = getActivity().getSharedPreferences("SolaratePrefs", Context.MODE_PRIVATE);
-            String username = prefs.getString("USERNAME", "Username");
-            tvUsernameHeader.setText(username);
+            tvUsernameHeader.setText(prefs.getString("USERNAME", "Username"));
         }
 
-        // ==========================================
-        // 3. LOAD GAMBAR POSTER DUMMY (MENGGUNAKAN GLIDE)
-        // ==========================================
-        // URL gambar poster dari TMDB (Contoh film terkenal)
-        String urlFav1 = "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"; // Interstellar
-        String urlFav2 = "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"; // Spider-Man
-        String urlFav3 = "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg"; // Dune
-        String urlRecent1 = "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"; // Oppenheimer
-        String urlRecent2 = "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg"; // Top Gun Maverick
-
-        // Memuat gambar ke dalam ImageView
-        Glide.with(this).load(urlFav1).into(ivFav1);
-        Glide.with(this).load(urlFav2).into(ivFav2);
-        Glide.with(this).load(urlFav3).into(ivFav3);
-        Glide.with(this).load(urlRecent1).into(ivRecent1);
-        Glide.with(this).load(urlRecent2).into(ivRecent2);
-
-        // ==========================================
-        // 4. Logika Klik pada TAB DI ATAS (Profile, Diary, Lists, Watchlist)
-        // ==========================================
+        // 3. Klik pada TAB DI ATAS (Profile, Diary, Lists, Watchlist)
         profileTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-
-                if (position == 0) {
-                    // Tab Profile (sedang dibuka)
-                } else if (position == 1) {
-                    // Pindah ke DiaryActivity
+                if (position == 1) {
                     startActivity(new Intent(getActivity(), DiaryActivity.class));
                 } else if (position == 2) {
-                    // Pindah ke ListsActivity
                     startActivity(new Intent(getActivity(), ListsActivity.class));
                 } else if (position == 3) {
-                    // Pindah ke WatchlistActivity
                     startActivity(new Intent(getActivity(), WatchlistActivity.class));
                 }
             }
@@ -108,27 +97,12 @@ public class ProfileFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) { }
         });
 
-        // ==========================================
-        // 5. Logika Klik pada DAFTAR STATISTIK DI BAWAH
-        // ==========================================
-        rowFilms.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), com.example.solarate.activities.MainActivity.class);
-            startActivity(intent);
-        });
+        // 4. Klik pada DAFTAR STATISTIK DI BAWAH
+        rowWatched.setOnClickListener(v -> startActivity(new Intent(getActivity(), WatchedActivity.class)));
+        rowReviews.setOnClickListener(v -> startActivity(new Intent(getActivity(), ReviewsActivity.class)));
+        rowWatchlist.setOnClickListener(v -> startActivity(new Intent(getActivity(), WatchlistActivity.class)));
 
-        rowReviews.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), com.example.solarate.activities.ReviewsActivity.class);
-            startActivity(intent);
-        });
-
-        rowWatchlist.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), WatchlistActivity.class);
-            startActivity(intent);
-        });
-
-        // ==========================================
-        // 6. Logika Tombol Logout
-        // ==========================================
+        // 5. Logout
         btnLogout.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -139,5 +113,83 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    // Data profile dimuat ulang setiap kali halaman tampil, supaya selalu sinkron
+    // dengan tombol Favorite / Watchlist / Watch / Review di halaman detail.
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Kembalikan tab ke "Profile" setelah balik dari Diary/Lists/Watchlist
+        TabLayout.Tab first = profileTabs.getTabAt(0);
+        if (first != null && !first.isSelected()) first.select();
+
+        refreshProfileData();
+    }
+
+    private void refreshProfileData() {
+        Context ctx = requireContext();
+
+        List<Movie> favorites = UserDataManager.getMovies(ctx, UserDataManager.FAVORITES);
+        List<Movie> watched = UserDataManager.getMovies(ctx, UserDataManager.WATCHED);
+        List<Movie> watchlist = UserDataManager.getMovies(ctx, UserDataManager.WATCHLIST);
+        List<Review> reviews = UserDataManager.getReviews(ctx);
+
+        // ---- Jumlah di daftar statistik ----
+        tvWatchedCount.setText(String.valueOf(watched.size()));
+        tvReviewsCount.setText(String.valueOf(reviews.size()));
+        tvWatchlistCount.setText(String.valueOf(watchlist.size()));
+
+        // ---- FAVORITES ----
+        llFavorites.removeAllViews();
+        for (Movie m : favorites) {
+            addPoster(llFavorites, m, null);
+        }
+        tvFavoritesEmpty.setVisibility(favorites.isEmpty() ? View.VISIBLE : View.GONE);
+
+        // ---- RECENT ACTIVITY: film yang baru ditonton, lalu film yang baru di-review ----
+        llRecent.removeAllViews();
+        List<Object[]> recent = new ArrayList<>();   // {Movie, Review atau null}
+        Set<Integer> added = new HashSet<>();
+
+        for (Movie m : watched) {
+            if (recent.size() >= MAX_RECENT) break;
+            recent.add(new Object[]{m, UserDataManager.getReview(ctx, m.getId())});
+            added.add(m.getId());
+        }
+        for (Review r : reviews) {
+            if (recent.size() >= MAX_RECENT) break;
+            if (added.add(r.getMovieId())) {
+                recent.add(new Object[]{r.toMovie(), r});
+            }
+        }
+        for (Object[] item : recent) {
+            Review r = (Review) item[1];
+            addPoster(llRecent, (Movie) item[0], r != null ? r.getStars() : null);
+        }
+        tvRecentEmpty.setVisibility(recent.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    /** Tambah satu poster (klik -> halaman detail) ke baris horizontal. */
+    private void addPoster(LinearLayout parent, Movie movie, @Nullable String stars) {
+        View item = LayoutInflater.from(getContext()).inflate(R.layout.item_profile_poster, parent, false);
+        ImageView iv = item.findViewById(R.id.ivProfilePoster);
+        TextView tvStars = item.findViewById(R.id.tvProfileStars);
+
+        Glide.with(this)
+                .load(movie.getPosterUrl())
+                .placeholder(R.color.lb_dark)
+                .error(R.color.lb_black)
+                .into(iv);
+
+        if (stars != null && !stars.isEmpty()) {
+            tvStars.setText(stars);
+            tvStars.setVisibility(View.VISIBLE);
+        }
+
+        item.setOnClickListener(v ->
+                startActivity(MovieDetailActivity.newIntent(requireContext(), movie)));
+        parent.addView(item);
     }
 }

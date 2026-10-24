@@ -1,55 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/lb_black">
 
+    <!-- ========== HEADER ========== -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@color/lb_black">
 
-        <!-- ID: ivDetailBackdrop -->
         <ImageView
-            android:id="@+id/ivDetailBackdrop"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:scaleType="centerCrop"
-            android:background="@color/lb_dark" />
+            android:id="@+id/ivDetailBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Back"
+            app:tint="@color/white" />
 
-        <!-- ID: tvDetailTitle -->
         <TextView
-            android:id="@+id/tvDetailTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Movie Title"
+            android:layout_marginStart="12dp"
+            android:text="Film"
             android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp" />
-
-        <!-- ID: tvDetailRating -->
-        <TextView
-            android:id="@+id/tvDetailRating"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="★ 8.5"
-            android:textColor="@color/lb_green"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp" />
-
-        <!-- ID: tvDetailOverview -->
-        <TextView
-            android:id="@+id/tvDetailOverview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sinopsis film akan muncul di sini..."
-            android:textColor="@color/lb_gray"
-            android:textSize="14sp"
-            android:layout_marginTop="16dp"
-            android:lineSpacingExtra="4dp" />
-
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
-</ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lb_dark" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- BACKDROP -->
+            <ImageView
+                android:id="@+id/ivDetailBackdrop"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:background="@color/lb_dark" />
+
+            <!-- POSTER + INFO UTAMA -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardBackgroundColor="@color/lb_dark"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/ivDetailPoster"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvDetailTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Movie Title"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDetailYearRuntime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="—"
+                        android:textColor="@color/lb_gray"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvDetailDirector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Directed by —"
+                        android:textColor="@color/lb_gray"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvDetailProducer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Produced by —"
+                        android:textColor="@color/lb_gray"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- RATING BAR -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RATING"
+                    android:textColor="@color/lb_gray"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <RatingBar
+                        android:id="@+id/ratingBarDetail"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:stepSize="0.1"
+                        android:progressTint="@color/lb_green"
+                        android:secondaryProgressTint="@color/lb_green"
+                        android:progressBackgroundTint="@color/lb_dark" />
+
+                    <TextView
+                        android:id="@+id/tvDetailRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="—"
+                        android:textColor="@color/lb_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lb_dark" />
+
+            <!-- ACTION BUTTONS: Favorite | Watchlist | Watch | Review -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView
+                        android:id="@+id/icFavorite"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_heart" />
+                    <TextView
+                        android:id="@+id/lblFavorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Favorite"
+                        android:textSize="11sp"
+                        android:textColor="@color/lb_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnWatchlist"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView
+                        android:id="@+id/icWatchlist"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_watchlist" />
+                    <TextView
+                        android:id="@+id/lblWatchlist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Watchlist"
+                        android:textSize="11sp"
+                        android:textColor="@color/lb_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnWatch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView
+                        android:id="@+id/icWatch"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_eye" />
+                    <TextView
+                        android:id="@+id/lblWatch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Watch"
+                        android:textSize="11sp"
+                        android:textColor="@color/lb_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnReview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView
+                        android:id="@+id/icReview"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_edit" />
+                    <TextView
+                        android:id="@+id/lblReview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Review"
+                        android:textSize="11sp"
+                        android:textColor="@color/lb_gray" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lb_dark" />
+
+            <!-- SYNOPSIS -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:text="SYNOPSIS"
+                android:textColor="@color/lb_gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvDetailOverview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
+                android:text="Sinopsis film akan muncul di sini..."
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

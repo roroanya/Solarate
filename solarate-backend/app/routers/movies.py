@@ -58,10 +58,7 @@ async def upcoming(page: int = Pg):
     )
 
 
-@router.get(
-    "/discover",
-    response_model=s.Page[s.MovieSummary],
-    summary="Browse by release date / genre / country / language",
+@router.get("/discover", response_model=s.Page[s.MovieSummary], summary="Browse by release date / genre / country / language",
 )
 async def discover(
     page: int = Pg,
@@ -92,19 +89,34 @@ async def discover(
     return await _feed("/discover/movie", page, params)
 
 
-@router.get("/{movie_id}", response_model=s.MovieDetail, summary="Detail film lengkap")
+@router.get(
+    "/{movie_id}",
+    response_model=s.MovieDetail,
+    summary="Detail film lengkap",
+)
 async def movie_detail(
-    movie_id: int, region: str = Query(None, min_length=2, max_length=2, description="Negara untuk 'Where to watch'")
+    movie_id: int,
+    region: str = Query(
+        None,
+        min_length=2,
+        max_length=2,
+        description="Negara untuk 'Where to watch'",
+    ),
 ):
     region = (region or settings.default_region).upper()
+
     data = await tmdb.get(
         f"/movie/{movie_id}",
         {
-            "append_to_response": "credits,videos,similar,recommendations,reviews,watch/providers,release_dates",
+            "append_to_response": (
+                "credits,videos,similar,recommendations,reviews,"
+                "watch/providers,release_dates"
+            ),
             "include_video_language": "en,null",
         },
         ttl=1800,
     )
+
     return mappers.movie_detail(data, region)
 
 

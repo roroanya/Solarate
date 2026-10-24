@@ -13,18 +13,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.solarate.R;
 import com.example.solarate.activities.MovieDetailActivity;
+import com.example.solarate.data.UserDataManager;
 import com.example.solarate.models.Movie;
 import java.util.List;
+import java.util.Set;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private List<Movie> movieList;
     private Context context;
+    private Set<Integer> watchedIds;
 
     // Constructor untuk menerima data dari Fragment
     public MovieAdapter(List<Movie> movieList, Context context) {
         this.movieList = movieList;
         this.context = context;
+        refreshWatched();
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.movieList = movies;
+        notifyDataSetChanged();
+    }
+
+    public void refreshWatched() {
+        this.watchedIds = UserDataManager.getIds(context, UserDataManager.WATCHED);
     }
 
     @NonNull
@@ -48,6 +61,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 .error(R.color.lb_black)      // Warna hitam jika gambar gagal dimuat
                 .into(holder.ivPoster);
 
+        // Tampilkan badge jika sudah ditonton
+        if (watchedIds != null && watchedIds.contains(movie.getId())) {
+            holder.ivWatchedBadge.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivWatchedBadge.setVisibility(View.GONE);
+        }
+
         // INTENT & BUNDLE: Jika poster diklik, pindah ke MovieDetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, MovieDetailActivity.class);
@@ -68,11 +88,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     // Class ViewHolder untuk mendeklarasikan komponen UI
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
         ImageView ivPoster;
-        TextView tvTitle;
+        ImageView ivWatchedBadge;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            ivWatchedBadge = itemView.findViewById(R.id.ivWatchedBadge);
         }
     }
 }

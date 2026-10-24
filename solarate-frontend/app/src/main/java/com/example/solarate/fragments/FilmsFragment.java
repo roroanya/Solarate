@@ -26,6 +26,7 @@ import retrofit2.Response;
 public class FilmsFragment extends Fragment {
 
     private RecyclerView rvMovies;
+    private MovieAdapter adapter;
 
     // THREADING: Menyiapkan Background Thread dan Main Thread
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -64,7 +65,8 @@ public class FilmsFragment extends Fragment {
 
                     // THREADING: Kembali ke Main Thread untuk update UI (RecyclerView)
                     handler.post(() -> {
-                        MovieAdapter adapter = new MovieAdapter(movies, getContext());
+                        if (getContext() == null) return;
+                        adapter = new MovieAdapter(movies, getContext());
                         rvMovies.setAdapter(adapter);
                     });
                 } else {
@@ -76,6 +78,16 @@ public class FilmsFragment extends Fragment {
                 showError("Error koneksi: Pastikan Backend Python menyala! (" + e.getMessage() + ")");
             }
         });
+    }
+
+    // Saat kembali dari halaman detail, perbarui tanda "sudah ditonton" di poster
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.refreshWatched();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void showError(String message) {

@@ -2,15 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     android:background="@color/lb_black">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Halaman Watchlist"
+        android:text="Your Watchlist"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvWatchlistCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0 films"
+        android:textColor="@color/lb_gray"
+        android:textSize="13sp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvWatchlistEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Belum ada film yang ingin ditonton.\nTekan tombol Watchlist di halaman detail film."
+        android:textColor="@color/lb_gray"
+        android:paddingHorizontal="16dp"
+        android:visibility="gone" />
+
+    <!-- Grid sama dengan halaman Films -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvWatchlist"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="12dp" />
+
 </LinearLayout>
