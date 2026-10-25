@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/tvReviewMovie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Movie"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- TANGGAL NONTON -->
+    <LinearLayout
+        android:id="@+id/rowReviewDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textColor="@color/lb_gray"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvReviewDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:paddingHorizontal="12dp"
+            android:text="Today"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvReviewDateClear"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Hapus tanggal"
+            android:gravity="center"
+            android:text="✕"
+            android:textColor="@color/lb_gray"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lb_dark" />
+
+    <RatingBar
+        android:id="@+id/rbReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:rating="0"
+        android:progressTint="@color/lb_green"
+        android:secondaryProgressTint="@color/lb_green"
+        android:progressBackgroundTint="@color/lb_dark" />
+
+    <EditText
+        android:id="@+id/etReviewText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="top|start"
+        android:hint="Add a review..."
+        android:inputType="textMultiLine|textCapSentences"
+        android:minLines="4"
+        android:maxLines="8"
+        android:textColor="@color/white"
+        android:textColorHint="@color/lb_gray"
+        android:textSize="14sp" />
+</LinearLayout>
