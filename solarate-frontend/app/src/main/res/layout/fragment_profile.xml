@@ -254,23 +254,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp"
             android:visibility="gone">
 
-            <TextView
+            <!-- Daftar diary (header bulan + entri film) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDiaryTab"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Your Diary"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
+                android:layout_height="match_parent" />
 
+            <!-- Tampil hanya kalau diary masih kosong -->
             <TextView
+                android:id="@+id/tvDiaryEmpty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Belum ada catatan film yang ditonton."
-                android:textColor="@color/lb_gray" />
+                android:padding="16dp"
+                android:text="Belum ada film di diary.\nBuka detail film lalu tekan Review untuk mencatat tanggal nonton."
+                android:textColor="@color/lb_gray"
+                android:visibility="gone" />
         </LinearLayout>
 
         <!-- PANEL 2: LISTS -->
@@ -320,16 +320,6 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Your Watchlist"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="16dp" />
-
-            <TextView
                 android:id="@+id/tvWatchlistTabCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -337,7 +327,7 @@
                 android:textColor="@color/lb_gray"
                 android:textSize="13sp"
                 android:paddingHorizontal="16dp"
-                android:paddingTop="2dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp" />
 
             <TextView

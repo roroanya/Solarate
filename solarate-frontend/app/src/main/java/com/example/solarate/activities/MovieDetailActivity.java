@@ -26,6 +26,9 @@ import com.example.solarate.models.Review;
 import com.example.solarate.network.ApiClient;
 import com.example.solarate.network.ApiService;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.util.List;
 import java.util.Locale;
@@ -327,6 +330,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView tvMovie = view.findViewById(R.id.tvReviewMovie);
         RatingBar rbReview = view.findViewById(R.id.rbReview);
         EditText etText = view.findViewById(R.id.etReviewText);
+        TextView tvDate = view.findViewById(R.id.tvReviewDate);
+        View rowDate = view.findViewById(R.id.rowReviewDate);
+        View btnClearDate = view.findViewById(R.id.tvReviewDateClear);
 
         String yearText = movie.getYearText();
         tvMovie.setText(movie.getTitle() + (yearText.isEmpty() ? "" : " (" + yearText + ")"));
@@ -337,10 +343,41 @@ public class MovieDetailActivity extends AppCompatActivity {
             etText.setText(existing.getText());
         }
 
+        // TANGGAL NONTON
+        final String[] watchedDate = { existing != null ? existing.getWatchedDate() : Review.today() };
+        Runnable showDate = () -> tvDate.setText(
+                watchedDate[0].isEmpty() ? "No date" : Review.toDisplay(watchedDate[0]));
+        showDate.run();
+
+        rowDate.setOnClickListener(v -> {
+            long start = watchedDate[0].isEmpty()
+                    ? Review.isoToUtcMillis(Review.today())
+                    : Review.isoToUtcMillis(watchedDate[0]);
+            CalendarConstraints constraints = new CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointBackward.before(Review.isoToUtcMillis(Review.today())))
+                    .build();
+            MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select Date")
+                    .setSelection(start)
+                    .setCalendarConstraints(constraints)
+                    .build();
+            picker.addOnPositiveButtonClickListener(selection -> {
+                watchedDate[0] = Review.utcMillisToIso(selection);
+                showDate.run();
+            });
+            picker.show(getSupportFragmentManager(), "reviewDatePicker");
+        });
+
+        // Tombol x > hapus tanggal
+        btnClearDate.setOnClickListener(v -> {
+            watchedDate[0] = "";
+            showDate.run();
+        });
+
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
                 .setTitle("Review")
                 .setView(view)
-                .setPositiveButton("Save", null)   // di-override di bawah supaya bisa validasi
+                .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", null);
 
         if (existing != null) {
@@ -361,7 +398,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 return;
             }
 
-            UserDataManager.saveReview(this, new Review(movie, rating, text));
+            UserDataManager.saveReview(this, new Review(movie, rating, text, watchedDate[0]));
             Toast.makeText(this, "Review disimpan", Toast.LENGTH_SHORT).show();
             refreshButtonStates();
             dialog.dismiss();

@@ -30,6 +30,7 @@ import com.example.solarate.activities.ReviewsActivity;
 import com.example.solarate.activities.SettingsActivity;
 import com.example.solarate.activities.WatchedActivity;
 import com.example.solarate.adapters.ListAdapter;
+import com.example.solarate.adapters.DiaryAdapter;
 import com.example.solarate.adapters.MovieAdapter;
 import com.example.solarate.data.UserDataManager;
 import com.example.solarate.models.ListSummary;
@@ -69,6 +70,8 @@ public class ProfileFragment extends Fragment {
     // Panel isi: hanya satu yang tampil sesuai tab yang dipilih
     private View panelProfile, panelDiary, panelLists, panelWatchlist;
     private MovieAdapter watchlistAdapter;
+    private DiaryAdapter diaryAdapter;
+    private TextView tvDiaryEmpty;
     private TextView tvWatchlistTabCount, tvWatchlistTabEmpty;
 
     // Tab Lists: data dari backend (/api/lists), dimuat sekali saat tab pertama kali dibuka
@@ -119,6 +122,13 @@ public class ProfileFragment extends Fragment {
         rvLists = view.findViewById(R.id.rvListsTab);
         tvListsStatus = view.findViewById(R.id.tvListsStatus);
         rvLists.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Tab Diary: daftar film per bulan berdasarkan tanggal nonton
+        RecyclerView rvDiary = view.findViewById(R.id.rvDiaryTab);
+        rvDiary.setLayoutManager(new LinearLayoutManager(getContext()));
+        diaryAdapter = new DiaryAdapter(requireContext());
+        rvDiary.setAdapter(diaryAdapter);
+        tvDiaryEmpty = view.findViewById(R.id.tvDiaryEmpty);
 
         // Tab Watchlist: grid 3 kolom (sama dengan grid di Home)
         RecyclerView rvWatchlist = view.findViewById(R.id.rvWatchlistTab);
@@ -176,6 +186,13 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         refreshProfileData();
         refreshWatchlistPanel();
+        refreshDiaryPanel();
+    }
+
+    /** Isi tab Diary dari review yang punya tanggal nonton (dikelompokkan per bulan). */
+    private void refreshDiaryPanel() {
+        diaryAdapter.setReviews(UserDataManager.getReviews(requireContext()));
+        tvDiaryEmpty.setVisibility(diaryAdapter.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     // ==========================================================
