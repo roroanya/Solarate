@@ -80,17 +80,6 @@
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvProfileBio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:paddingHorizontal="24dp"
-                        android:text="here's my museum of movies"
-                        android:textColor="@color/lb_gray"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp" />
                 </LinearLayout>
 
                 <!-- 3. FAVORITES SECTION -->

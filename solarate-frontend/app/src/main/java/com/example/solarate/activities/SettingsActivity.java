@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.solarate.R;
+import com.example.solarate.data.AccountStore;
 import com.example.solarate.data.UserDataManager;
 
 import java.io.File;
@@ -35,7 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String PREFS = "SolaratePrefs";
 
     private ImageView ivAvatar;
-    private EditText etUsername, etBio, etEmail;
+    private EditText etUsername, etPassword, etEmail;
     private Button btnSave;
 
     private Uri pendingAvatar;   // foto yang baru dipilih, belum disimpan
@@ -65,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         ivAvatar = findViewById(R.id.ivSettingsAvatar);
         etUsername = findViewById(R.id.etSettingsUsername);
-        etBio = findViewById(R.id.etSettingsBio);
+        etPassword = findViewById(R.id.etSettingsPassword);
         etEmail = findViewById(R.id.etSettingsEmail);
         btnSave = findViewById(R.id.btnSaveChanges);
 
@@ -79,7 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void loadCurrentData() {
         SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         etUsername.setText(prefs.getString("USERNAME", ""));
-        etBio.setText(prefs.getString("BIO", ""));
+        etPassword.setText(prefs.getString("PASSWORD", ""));
         etEmail.setText(prefs.getString("EMAIL", ""));
 
         String path = prefs.getString("AVATAR_PATH", null);
@@ -101,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void save() {
         String username = etUsername.getText().toString().trim();
-        String bio = etBio.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
 
         // ---- Validasi ----
@@ -110,27 +111,41 @@ public class SettingsActivity extends AppCompatActivity {
             etUsername.requestFocus();
             return;
         }
+        if (password.length() < 6) {
+            etPassword.setError("Password minimal 6 karakter");
+            etPassword.requestFocus();
+            return;
+        }
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.setError("Format email tidak valid");
             etEmail.requestFocus();
             return;
         }
 
-        btnSave.setEnabled(false);
-
         SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
-        String oldUsername = prefs.getString("USERNAME", "");
+        final String oldUsername = prefs.getString("USERNAME", "");
+
+        // Username tidak boleh sama dengan akun LAIN (mengganti huruf besar/kecil akun sendiri boleh)
+        if (!username.equalsIgnoreCase(oldUsername) && AccountStore.exists(this, username)) {
+            etUsername.setError("Username sudah dipakai");
+            etUsername.requestFocus();
+            return;
+        }
+
+        btnSave.setEnabled(false);
 
         // Data favorites/watchlist/watched/reviews terikat ke username -> pindahkan ke nama baru
         UserDataManager.migrateUser(this, oldUsername, username);
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("USERNAME", username);
-        editor.putString("BIO", bio);
+        // Password baru langsung dipakai untuk login berikutnya (disalin ke daftar akun lewat syncFromSession)
+        editor.putString("PASSWORD", password);
         editor.putString("EMAIL", email);
 
         if (pendingAvatar == null) {
             editor.apply();
+            AccountStore.syncFromSession(this, oldUsername);   // salin perubahan ke daftar akun
             done();
             return;
         }
@@ -141,15 +156,19 @@ public class SettingsActivity extends AppCompatActivity {
             try {
                 Bitmap bmp = Glide.with(getApplicationContext()).asBitmap().load(uri)
                         .centerCrop().submit(512, 512).get();
-                File out = new File(getFilesDir(), "avatar.jpg");
+                // Nama file per username supaya foto tiap akun tidak saling menimpa
+                File out = new File(getFilesDir(),
+                        "avatar_" + username.toLowerCase().replaceAll("[^a-z0-9]", "_") + ".jpg");
                 try (FileOutputStream fos = new FileOutputStream(out)) {
                     bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
                 }
                 editor.putString("AVATAR_PATH", out.getAbsolutePath());
                 editor.apply();
+                AccountStore.syncFromSession(this, oldUsername);
                 handler.post(this::done);
             } catch (Exception e) {
                 editor.apply();   // teks tetap tersimpan walau foto gagal
+                AccountStore.syncFromSession(this, oldUsername);
                 handler.post(() -> {
                     Toast.makeText(this, "Foto gagal disimpan, data lain tersimpan", Toast.LENGTH_LONG).show();
                     finish();

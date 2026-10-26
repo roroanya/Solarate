@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -62,7 +63,6 @@ public class ProfileFragment extends Fragment {
     private TextView tvUsernameHeader;
     private Button btnLogout, btnSettings;
     private ImageView ivAvatar;
-    private TextView tvBio;
     private TabLayout profileTabs;
     private LinearLayout rowWatched, rowReviews, rowWatchlist;
     private TextView tvWatchedCount, tvReviewsCount, tvWatchlistCount;
@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
     // ==========================================================
     // onCreateView: dipanggil sekali saat layout dibuat.
     // Tugasnya menghubungkan komponen XML ke Java dan memasang semua listener klik.
-    // Data (username, bio, foto, film) TIDAK diisi di sini, tapi di onResume().
+    // Data (username, foto, film) TIDAK diisi di sini, tapi di onResume().
     // ==========================================================
     @Nullable
     @Override
@@ -101,7 +101,6 @@ public class ProfileFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btnLogout);
         btnSettings = view.findViewById(R.id.btnSettings);
         ivAvatar = view.findViewById(R.id.ivProfileAvatar);
-        tvBio = view.findViewById(R.id.tvProfileBio);
         profileTabs = view.findViewById(R.id.profileTabs);
 
         rowWatched = view.findViewById(R.id.rowWatched);
@@ -141,12 +140,24 @@ public class ProfileFragment extends Fragment {
         tvFavoritesEmpty = view.findViewById(R.id.tvFavoritesEmpty);
         tvRecentEmpty = view.findViewById(R.id.tvRecentEmpty);
 
-        // 2. Klik pada TAB DI ATAS (Profile, Diary, Lists, Watchlist).
+        // 2. TOMBOL BACK: kalau sedang di tab Diary / Lists / Watchlist, back kembali ke tab Profile
+        //    (bukan keluar aplikasi). Callback ini hanya aktif saat tab yang terbuka bukan Profile.
+        final OnBackPressedCallback backToProfile = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                selectTab(0);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher()
+                .addCallback(getViewLifecycleOwner(), backToProfile);
+
+        // 3. Klik pada TAB DI ATAS (Profile, Diary, Lists, Watchlist).
         //    Tidak membuka halaman baru: header & tab tetap, hanya panel di bawahnya yang berganti.
         profileTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 showPanel(tab.getPosition());
+                backToProfile.setEnabled(tab.getPosition() != 0);
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) { }
@@ -154,16 +165,16 @@ public class ProfileFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) { }
         });
 
-        // 3. Klik pada DAFTAR STATISTIK DI BAWAH
+        // 4. Klik pada DAFTAR STATISTIK DI BAWAH
         rowWatched.setOnClickListener(v -> startActivity(new Intent(getActivity(), WatchedActivity.class)));
         rowReviews.setOnClickListener(v -> startActivity(new Intent(getActivity(), ReviewsActivity.class)));
         // Baris "Watchlist" juga hanya berpindah ke tab Watchlist (tidak membuka halaman baru)
         rowWatchlist.setOnClickListener(v -> selectTab(3));
 
-        // 4. Tombol Settings -> buka halaman Settings (ubah foto, username, bio, email)
+        // 5. Tombol Settings -> buka halaman Settings (ubah foto, username, password, email)
         btnSettings.setOnClickListener(v -> startActivity(new Intent(getActivity(), SettingsActivity.class)));
 
-        // 5. Logout: kembali ke Login dan hapus semua activity sebelumnya dari back stack
+        // 6. Logout: kembali ke Login dan hapus semua activity sebelumnya dari back stack
         btnLogout.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -267,19 +278,15 @@ public class ProfileFragment extends Fragment {
     }
 
     // ==========================================================
-    // bindHeader: mengisi bagian atas profile (username, bio, foto)
+    // bindHeader: mengisi bagian atas profile (username dan foto)
     // dari SharedPreferences "SolaratePrefs". Data ini ditulis oleh SettingsActivity:
     //   USERNAME    -> nama pengguna
-    //   BIO         -> teks bio (kalau kosong dipakai teks default)
     //   AVATAR_PATH -> lokasi file foto profil di penyimpanan internal app
     // Kalau belum ada foto, yang tampil logo Solarate bawaan.
     // ==========================================================
     private void bindHeader(Context ctx) {
         SharedPreferences prefs = ctx.getSharedPreferences("SolaratePrefs", Context.MODE_PRIVATE);
         tvUsernameHeader.setText(prefs.getString("USERNAME", "Username"));
-
-        String bio = prefs.getString("BIO", "");
-        tvBio.setText(bio.isEmpty() ? "here's my museum of movies" : bio);
 
         String path = prefs.getString("AVATAR_PATH", null);
         File file = path == null ? null : new File(path);
@@ -306,7 +313,7 @@ public class ProfileFragment extends Fragment {
     private void refreshProfileData() {
         Context ctx = requireContext();
 
-        bindHeader(ctx);   // username, bio, dan foto profil
+        bindHeader(ctx);   // username dan foto profil
 
         List<Movie> favorites = UserDataManager.getMovies(ctx, UserDataManager.FAVORITES);
         List<Movie> watched = UserDataManager.getMovies(ctx, UserDataManager.WATCHED);

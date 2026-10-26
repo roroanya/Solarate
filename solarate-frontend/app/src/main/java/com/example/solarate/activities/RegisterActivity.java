@@ -2,7 +2,6 @@ package com.example.solarate.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.solarate.R;
+import com.example.solarate.data.AccountStore;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -35,16 +35,34 @@ public class RegisterActivity extends AppCompatActivity {
             String username = etUsername.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
-            // ... (BIARKAN KODE VALIDASI FORM YANG LAMA DI SINI) ...
+            // ---- Validasi form ----
+            if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                etEmail.setError("Format email tidak valid");
+                etEmail.requestFocus();
+                return;
+            }
+            if (username.length() < 3) {
+                etUsername.setError("Username minimal 3 karakter");
+                etUsername.requestFocus();
+                return;
+            }
+            if (password.length() < 6) {
+                etPassword.setError("Password minimal 6 karakter");
+                etPassword.requestFocus();
+                return;
+            }
 
-            // --- SIMPAN DATA KE SHAREDPREFERENCES ---
-            // Ini berfungsi sebagai database lokal
-            android.content.SharedPreferences prefs = getSharedPreferences("SolaratePrefs", MODE_PRIVATE);
-            android.content.SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("EMAIL", email);
-            editor.putString("USERNAME", username);
-            editor.putString("PASSWORD", password);
-            editor.apply(); // Simpan secara permanen
+            // Akun lama (dari versi sebelum multi-akun) diselamatkan dulu ke daftar akun
+            AccountStore.importLegacy(this);
+
+            // ---- DAFTARKAN AKUN BARU ----
+            // Akun ditambahkan ke daftar semua akun. Akun yang sudah ada TIDAK dihapus / ditimpa.
+            // Kalau username sudah dipakai, register() mengembalikan null.
+            if (AccountStore.register(this, username, email, password) == null) {
+                etUsername.setError("Username sudah dipakai");
+                etUsername.requestFocus();
+                return;
+            }
 
             Toast.makeText(RegisterActivity.this, "Registrasi Berhasil! Silakan Login.", Toast.LENGTH_LONG).show();
 

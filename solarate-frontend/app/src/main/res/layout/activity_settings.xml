@@ -96,29 +96,27 @@
             android:textColorHint="@color/lb_gray" />
 
         <!-- 3. BIO -->
+        <!-- 3. PASSWORD (sengaja ditampilkan apa adanya, tidak disembunyikan) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bio"
+            android:text="Password"
             android:textColor="@color/lb_gray"
             android:textSize="13sp" />
 
         <EditText
-            android:id="@+id/etSettingsBio"
+            android:id="@+id/etSettingsPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="20dp"
             android:background="@color/lb_dark"
-            android:gravity="top|start"
-            android:hint="Tell us about yourself"
-            android:inputType="textMultiLine|textCapSentences"
-            android:maxLength="150"
-            android:minLines="3"
-            android:padding="16dp"
+            android:hint="Password"
+            android:inputType="text"
+            android:maxLength="30"
+            android:paddingStart="16dp"
             android:textColor="@color/white"
             android:textColorHint="@color/lb_gray" />
-
         <!-- 4. EMAIL -->
         <TextView
             android:layout_width="wrap_content"
